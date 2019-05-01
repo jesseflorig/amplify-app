@@ -1,6 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+
+// AWS Amplify
+import Amplify from "aws-amplify";
+import awsmobile from "./aws-exports";
+import { withAuthenticator } from "aws-amplify-react";
+
+Amplify.configure(awsmobile);
 
 function App() {
   return (
@@ -23,4 +30,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App, true);
