@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useAuth } from "../hooks/amplify-hooks";
-import { useStore, useDispatch } from "../state/store";
+import { useAuth } from "hooks/amplify-hooks";
+import { useStore, useDispatch } from "state/store";
 
 export default function AuthView({ children }) {
   const Auth = useAuth();
@@ -57,7 +57,6 @@ export default function AuthView({ children }) {
 
   return (
     <Fragment>
-      <p>{`${authView} ${username}`}</p>
       {authView === "login" && (
         <Fragment>
           <form onSubmit={handleSubmit}>
