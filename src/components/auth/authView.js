@@ -4,7 +4,7 @@ import { useAuth } from "hooks/amplify-hooks";
 import { useStore, useDispatch } from "state/store";
 
 export default function AuthView({ children }) {
-  const Auth = useAuth();
+  const auth = useAuth();
   const state = useStore("user");
   const dispatch = useDispatch();
   const { authView, loading, user, username, password } = state;
@@ -15,11 +15,12 @@ export default function AuthView({ children }) {
   useEffect(
     () => {
       //check auth users
-      Auth.currentAuthenticatedUser()
+      auth
+        .currentAuthenticatedUser()
         .then(user => dispatch({ type: "setUser", payload: user }))
         .catch(err => console.log(`Error getting current user: ${err}`));
     },
-    [Auth, dispatch]
+    [auth, dispatch]
   );
 
   // Update view when user changes
@@ -36,8 +37,9 @@ export default function AuthView({ children }) {
     evt.preventDefault();
     dispatch({ type: "setLoading", payload: true });
     const { username, password } = state;
-    Auth.signIn({ username, password })
-      .then(user => dispatch({ type: "setUser", payload: user }))
+    auth
+      .signIn({ username, password })
+      .then(user => dispatch({ type: "login", payload: user }))
       .catch(err => console.log(`Error Logging In: ${err}`));
   };
 

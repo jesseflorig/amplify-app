@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+import UserMenu from "components/userMenu"
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,6 +41,7 @@ function App() {
           >
             Dashboard
           </Typography>
+          <UserMenu />
         </Toolbar>
       </AppBar>
       <h1>Hello World</h1>

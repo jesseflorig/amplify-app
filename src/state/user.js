@@ -9,6 +9,11 @@ export const initialUserState = {
 };
 
 const actions = {
+  login: state => user => {
+    state.user = user;
+    state.password = "";
+    state.loading = false;
+  },
   reset: state => () => {
     state = initialUserState;
   },
