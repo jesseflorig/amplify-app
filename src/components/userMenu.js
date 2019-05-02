@@ -29,7 +29,7 @@ export default function UserMenu() {
 
   const handleLogout = () => {
     handleClose();
-    dispatch({ type: "setView", payload: "login" });
+    dispatch({ type: "setView", payload: "signIn" });
     auth
       .signOut({ global: true })
       .then(data => console.log(data))

@@ -1,5 +1,5 @@
 export const initialUserState = {
-  authView: "login",
+  authView: "signIn",
   loading: false,
   user: null,
   username: "",
@@ -13,6 +13,10 @@ const actions = {
     state.user = user;
     state.password = "";
     state.loading = false;
+  },
+  loginError: state => error => {
+    console.log("Error loggin in:", error);
+    state = initialUserState;
   },
   reset: state => () => {
     state = initialUserState;
