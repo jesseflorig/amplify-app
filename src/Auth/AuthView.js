@@ -1,51 +1,28 @@
 import React, { Fragment, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useImmerReducer } from "use-immer";
-
-// AWS
-import Amplify, { Auth } from "aws-amplify";
-import awsmobile from "../aws-exports";
-
-Amplify.configure(awsmobile);
-
-const initialState = {
-  authView: "login",
-  loading: false,
-  user: null,
-  username: "",
-  email: "",
-  password: "",
-  verifyCode: ""
-};
-
-function reducer(draft, action) {
-  switch (action.type) {
-    case "reset":
-      return initialState;
-    case "update":
-      const { key, val } = action.payload;
-      draft[key] = val;
-      return draft;
-    case "setLoading":
-      draft.loading = action.payload;
-      return draft;
-    case "setUser":
-      draft.user = action.payload;
-      return draft;
-    case "setView":
-      draft.authView = action.payload;
-      return draft;
-    default:
-      return void console.log(`Unhandled action: ${action.type}`);
-  }
-}
+import { useAuth } from "../hooks/amplify-hooks";
+import { useStore, useDispatch } from "../state/store";
 
 export default function AuthView({ children }) {
-  const [state, dispatch] = useImmerReducer(reducer, initialState);
+  const Auth = useAuth();
+  const state = useStore("user");
+  const dispatch = useDispatch();
   const { authView, loading, user, username, password } = state;
 
   const loginLabel = loading ? "Logging in..." : "Log In";
 
+  // Check authenticated users on load
+  useEffect(
+    () => {
+      //check auth users
+      Auth.currentAuthenticatedUser()
+        .then(user => dispatch({ type: "setUser", payload: user }))
+        .catch(err => console.log(`Error getting current user: ${err}`));
+    },
+    [Auth, dispatch]
+  );
+
+  // Update view when user changes
   useEffect(
     () => {
       if (user) {
