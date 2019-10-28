@@ -88,7 +88,7 @@ export default function SignIn() {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Email Address</InputLabel>
+            <InputLabel htmlFor="email">Username</InputLabel>
             <Input
               id="username"
               name="username"
