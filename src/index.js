@@ -9,7 +9,7 @@ import theme from "./theme";
 import StoreProvider from "state/store";
 import { ThemeProvider, StylesProvider, jssPreset } from "@material-ui/styles";
 import AuthView from "components/auth/authView";
-import App from "./app";
+import App from "./App";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 const jss = create({
