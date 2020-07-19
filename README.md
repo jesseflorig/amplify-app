@@ -4,6 +4,11 @@ A quickstart Amplify app with custom authentication workflow
 
 ## Setup
 
+Copy `sample.env` to `.env`
+```sh
+cp sample.env .env
+```
+
 Install dependencies:
 ```sh
 yarn
