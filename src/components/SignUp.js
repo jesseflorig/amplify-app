@@ -3,6 +3,10 @@ import { useAuth } from '../hooks/useAmplify';
 import { useForm } from 'react-hook-form';
 
 import {
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  AlertTitle,
   Button,
   Flex,
   FormControl,
@@ -10,6 +14,7 @@ import {
   Heading,
   Input,
   Link,
+  Spinner,
   Stack,
   Text,
 } from '@chakra-ui/core';
@@ -20,7 +25,8 @@ const SignUp = () => {
   const Auth = useAuth();
   const [loading, setLoading] = React.useState(false);
   const [signUpError, setSignUpError] = React.useState(false);
-  const { errors, formState, handleSubmit, register, watch } = useForm();
+  const emailRef = React.useRef();
+  const { errors, formState, handleSubmit, register, reset, watch } = useForm();
   const watchPassword = watch('password', '');
 
   const handleSignUp = ({ email, username, password }) => {
@@ -35,13 +41,16 @@ const SignUp = () => {
       },
     })
       .then((data) => {
-        console.log('success', data);
         setLoading(false);
+
+        //TODO: Confirm email page
       })
       .catch((err) => {
         console.error(err);
         setSignUpError(true);
         setLoading(false);
+        reset();
+        emailRef.current.focus();
       });
   };
 
@@ -55,6 +64,13 @@ const SignUp = () => {
             Sign in
           </Link>
         </Text>
+        {signUpError && (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle mr={2}>There was an error signing up.</AlertTitle>
+            <AlertDescription>Please try again, later.</AlertDescription>
+          </Alert>
+        )}
         <form onSubmit={handleSubmit(handleSignUp)}>
           <Stack spacing={2}>
             <FormControl isInvalid={errors.email}>
@@ -62,10 +78,13 @@ const SignUp = () => {
                 name="email"
                 type="email"
                 placeholder="Email"
-                ref={register({
-                  required: true,
-                  pattern: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i,
-                })}
+                ref={(el) => {
+                  register(el, {
+                    required: true,
+                    pattern: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i,
+                  });
+                  emailRef.current = el;
+                }}
               />
               <FormErrorMessage>
                 {errors.email &&
@@ -127,15 +146,22 @@ const SignUp = () => {
                   'Your passwords do not match'}
               </FormErrorMessage>
             </FormControl>
-            <Button
-              mt={4}
-              width="100%"
-              leftIcon="lock"
-              isLoading={formState.isSubmitting}
-              type="submit"
-            >
-              Sign Up
-            </Button>
+            {loading ? (
+              <Flex alignItems="center" justifyContent="center">
+                <Spinner mr={2} />
+                <Text>Signing In...</Text>
+              </Flex>
+            ) : (
+              <Button
+                mt={4}
+                width="100%"
+                leftIcon="lock"
+                isLoading={formState.isSubmitting}
+                type="submit"
+              >
+                Sign Up
+              </Button>
+            )}
           </Stack>
         </form>
       </Stack>
