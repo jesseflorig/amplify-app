@@ -1,133 +1,130 @@
-import React from "react";
-import { makeStyles } from "@material-ui/styles";
-import { useAuth } from "hooks/amplify-hooks";
-import { useStore, useDispatch } from "state/store";
+import React from 'react';
+import { useAuth } from '../hooks/useAmplify';
+import { useForm } from 'react-hook-form';
+import { AUTH_USER_TOKEN_KEY } from '../util';
 
-// Components
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import {
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  Button,
+  Checkbox,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Heading,
+  Input,
+  Link,
+  Spinner,
+  Stack,
+  Text,
+} from '@chakra-ui/core';
+import { useHistory, Link as RouteLink } from 'react-router-dom';
 
-const useStyles = makeStyles(theme => ({
-  main: {
-    width: "auto",
-    display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-      width: 400,
-      marginLeft: "auto",
-      marginRight: "auto"
-    }
-  },
-  paper: {
-    marginTop: theme.spacing.unit * 8,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`
-  },
-  avatar: {
-    margin: theme.spacing.unit,
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing.unit
-  },
-  submit: {
-    marginTop: theme.spacing.unit * 3
-  }
-}));
+const SignIn = () => {
+  const Auth = useAuth();
+  const [loading, setLoading] = React.useState(false);
+  const [signInError, setSignInError] = React.useState(false);
+  const history = useHistory();
+  const { handleSubmit, errors, register, formState } = useForm();
 
-export default function SignIn() {
-  const classes = useStyles();
-  const auth = useAuth();
-  const state = useStore("user");
-  const dispatch = useDispatch();
-  const { loading, username, password } = state;
+  const handleSignIn = ({ username, password }) => {
+    setSignInError(false);
+    setLoading(true);
 
-  const submitLabel = loading ? "Logging in..." : "Log In";
+    Auth.signIn(username, password)
+      .then((user) => {
+        console.log(user);
+        const { jwtToken } = user.signInUserSession.accessToken;
+        const { from } = history.state || {
+          from: {
+            pathname: '/',
+          },
+        };
 
-  const handleSubmit = evt => {
-    evt.preventDefault();
-    dispatch({ type: "setLoading", payload: true });
-    const { username, password } = state;
-    auth
-      .signIn({ username, password })
-      .then(user => dispatch({ type: "login", payload: user }))
-      .catch(err => dispatch({ type: "loginError", payload: err }));
-  };
+        localStorage.setItem(AUTH_USER_TOKEN_KEY, jwtToken);
 
-  const handleUpdate = evt => {
-    dispatch({
-      type: "update",
-      payload: {
-        key: evt.target.name,
-        val: evt.target.value
-      }
-    });
+        // TODO: Login toast
+
+        history.push(from);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+        setSignInError(true);
+      });
   };
 
   return (
-    <main className={classes.main}>
-      <Paper className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Username</InputLabel>
-            <Input
-              id="username"
-              name="username"
-              autoComplete="username"
-              autoFocus
-              value={username}
-              onChange={handleUpdate}
-              disabled={loading}
-            />
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
-            <Input
-              name="password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={handleUpdate}
-              disabled={loading}
-            />
-          </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-            disabled={true}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            disabled={loading}
-          >
-            {submitLabel}
-          </Button>
+    <Flex height="100vh" alignItems="center" justifyContent="center">
+      <Stack spacing={2} width="30em">
+        <Heading textAlign="center">Sign in to your account</Heading>
+        <Text textAlign="center">
+          or{' '}
+          <Link as={RouteLink} to="/signup">
+            Sign up
+          </Link>
+        </Text>
+        {signInError && (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertDescription>Incorrect username or password.</AlertDescription>
+          </Alert>
+        )}
+        <form onSubmit={handleSubmit(handleSignIn)}>
+          <Stack spacing={2}>
+            <FormControl isInvalid={errors.username}>
+              <Input
+                name="username"
+                placeholder="Username"
+                ref={register({ required: true })}
+                isDisabled={loading}
+              />
+              <FormErrorMessage>
+                {errors.username && 'Username is required'}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors.password}>
+              <Input
+                name="password"
+                type="password"
+                placeholder="Password"
+                ref={register({ required: true })}
+                isDisabled={loading}
+              />
+              <FormErrorMessage>
+                {errors.password && 'Password is required'}
+              </FormErrorMessage>
+            </FormControl>
+            <Flex justifyContent="space-between">
+              <Checkbox name="remember" ref={register} isDisabled={loading}>
+                Remember Me
+              </Checkbox>
+              <Link as={RouteLink} to="/forgot-password">
+                Forgot your password?
+              </Link>
+            </Flex>
+            {loading ? (
+              <Flex alignItems="center" justifyContent="center">
+                <Spinner mr={2} />
+                <Text>Signing In...</Text>
+              </Flex>
+            ) : (
+              <Button
+                mt={4}
+                width="100%"
+                leftIcon="lock"
+                isLoading={formState.isSubmitting}
+                type="submit"
+              >
+                Sign In
+              </Button>
+            )}
+          </Stack>
         </form>
-      </Paper>
-    </main>
+      </Stack>
+    </Flex>
   );
-}
+};
+
+export default SignIn;

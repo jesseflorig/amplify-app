@@ -32,8 +32,10 @@ yarn start
 
 ## Todo
 
-- [ ] Auth cookie (refresh while logged in)
-- [ ] Add Registration
-- [ ] Add Force change password
+- [ ] Fix login redirect
+- [ ] Finish Signup (email confirmation)
+- [ ] Handle temp password
+- [ ] Handle verify on login
+- [ ] Finish Remember Me
 - [ ] Add profile page
 - [ ] Add CRUD example

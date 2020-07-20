@@ -1,7 +1,7 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { theme } from '@chakra-ui/core'
 
-export default createMuiTheme({
-  typography: {
-    useNextVariants: true
-  }
-});
+const CustomTheme = {
+  ...theme
+}
+
+export default CustomTheme
