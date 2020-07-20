@@ -25,8 +25,9 @@ const SignIn = () => {
   const Auth = useAuth();
   const [loading, setLoading] = React.useState(false);
   const [signInError, setSignInError] = React.useState(false);
+  const usernameRef = React.useRef();
   const history = useHistory();
-  const { handleSubmit, errors, register, formState } = useForm();
+  const { handleSubmit, errors, formState, register, reset } = useForm();
 
   const handleSignIn = ({ username, password }) => {
     setSignInError(false);
@@ -34,24 +35,20 @@ const SignIn = () => {
 
     Auth.signIn(username, password)
       .then((user) => {
-        console.log(user);
         const { jwtToken } = user.signInUserSession.accessToken;
-        const { from } = history.state || {
-          from: {
-            pathname: '/',
-          },
-        };
+        const to = history.state ? history.state.from.pathanme : '/';
 
         localStorage.setItem(AUTH_USER_TOKEN_KEY, jwtToken);
 
         // TODO: Login toast
 
-        history.push(from);
+        history.push(to);
       })
       .catch((err) => {
-        console.error(err);
         setLoading(false);
         setSignInError(true);
+        reset();
+        usernameRef.current.focus();
       });
   };
 
@@ -77,7 +74,10 @@ const SignIn = () => {
               <Input
                 name="username"
                 placeholder="Username"
-                ref={register({ required: true })}
+                ref={(el) => {
+                  register(el, { required: true });
+                  usernameRef.current = el;
+                }}
                 isDisabled={loading}
               />
               <FormErrorMessage>

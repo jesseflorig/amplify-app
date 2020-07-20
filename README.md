@@ -32,7 +32,6 @@ yarn start
 
 ## Todo
 
-- [ ] Fix login redirect
 - [ ] Finish Signup (email confirmation)
 - [ ] Handle temp password
 - [ ] Handle verify on login

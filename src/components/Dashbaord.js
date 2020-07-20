@@ -11,7 +11,9 @@ const Dashboard = () => {
 
   const handleSignOut = () => {
     Auth.signOut({ global: true })
-      .then((data) => console.log(data))
+      .then((data) => {
+        // TODO: SignOut toast
+      })
       .catch((err) => console.error(err));
 
     localStorage.removeItem(AUTH_USER_TOKEN_KEY);
