@@ -13,24 +13,22 @@ import {
   FormErrorMessage,
   Heading,
   Input,
-  Link,
   Spinner,
   Stack,
   Text,
 } from '@chakra-ui/core';
-import { Link as RouteLink } from 'react-router-dom';
 
-const SignUp = () => {
+const UpdatePassword = () => {
   const MIN_PASSWORD_LENGTH = 8;
   const Auth = useAuth();
   const [loading, setLoading] = React.useState(false);
-  const [signUpError, setSignUpError] = React.useState(false);
-  const emailRef = React.useRef();
+  const [updateError, setUpdateError] = React.useState(false);
+  const tempPasswordRef = React.useRef();
   const { errors, formState, handleSubmit, register, reset, watch } = useForm();
-  const watchPassword = watch('password', '');
+  const watchNewPassword = watch('newPassword', '');
 
   const handleSignUp = ({ email, username, password }) => {
-    setSignUpError(false);
+    setUpdateError(false);
     setLoading(true);
 
     Auth.signUp({
@@ -47,24 +45,19 @@ const SignUp = () => {
       })
       .catch((err) => {
         console.error(err);
-        setSignUpError(true);
+        setUpdateError(true);
         setLoading(false);
         reset();
-        emailRef.current.focus();
+        tempPasswordRef.current.focus();
       });
   };
 
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
       <Stack spacing={2} width="30em">
-        <Heading textAlign="center">Sign up for an account</Heading>
-        <Text textAlign="center">
-          or{' '}
-          <Link as={RouteLink} to="/signin">
-            Sign in
-          </Link>
-        </Text>
-        {signUpError && (
+        <Heading textAlign="center">Update your password</Heading>
+        <Text textAlign="center">Please update your temporary password</Text>
+        {updateError && (
           <Alert status="error">
             <AlertIcon />
             <AlertTitle mr={2}>There was an error signing up.</AlertTitle>
@@ -73,43 +66,29 @@ const SignUp = () => {
         )}
         <form onSubmit={handleSubmit(handleSignUp)}>
           <Stack spacing={2}>
-            <FormControl isInvalid={errors.email}>
+            <FormControl isInvalid={errors.tempPassword}>
               <Input
-                name="email"
-                type="email"
-                placeholder="Email"
+                name="tempPassword"
+                type="password"
+                placeholder="Temporary password"
                 ref={(el) => {
                   register(el, {
                     required: true,
-                    pattern: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i,
                   });
-                  emailRef.current = el;
+                  tempPasswordRef.current = el;
                 }}
               />
               <FormErrorMessage>
-                {errors.email &&
-                  errors.email.type === 'required' &&
-                  'An email is required'}
-                {errors.email &&
-                  errors.email.type === 'pattern' &&
-                  'Email entered does not appear to be valid'}
+                {errors.tempPassword &&
+                  errors.tempPassword.type === 'required' &&
+                  'Your old password is required'}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={errors.username}>
+            <FormControl isInvalid={errors.newPassword}>
               <Input
-                name="username"
-                placeholder="Username"
-                ref={register({ required: true })}
-              />
-              <FormErrorMessage>
-                {errors.username && 'Username is required'}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={errors.password}>
-              <Input
-                name="password"
+                name="newPassword"
                 type="password"
-                placeholder="Password"
+                placeholder="New password"
                 ref={register({
                   required: true,
                   minLength: MIN_PASSWORD_LENGTH,
@@ -119,37 +98,37 @@ const SignUp = () => {
                 {`Minimum of ${MIN_PASSWORD_LENGTH} characters.`}
               </Text>
               <FormErrorMessage>
-                {errors.password &&
-                  errors.password.type === 'required' &&
-                  'A password is required'}
-                {errors.password &&
-                  errors.password.type === 'minLength' &&
-                  `Your password must be at least ${MIN_PASSWORD_LENGTH} characters`}
+                {errors.newPassword &&
+                  errors.newPassword.type === 'required' &&
+                  'A new password is required'}
+                {errors.newPassword &&
+                  errors.newPassword.type === 'minLength' &&
+                  `Your new password must be at least ${MIN_PASSWORD_LENGTH} characters`}
               </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={errors.confirmPassword}>
               <Input
                 name="confirmPassword"
                 type="password"
-                placeholder="Confirm password"
+                placeholder="Confirm new password"
                 ref={register({
                   required: true,
-                  validate: (value) => value === watchPassword,
+                  validate: (value) => value === watchNewPassword,
                 })}
               />
               <FormErrorMessage>
                 {errors.confirmPassword &&
                   errors.confirmPassword.type === 'required' &&
-                  'You must confirm your password'}
+                  'You must confirm your new password'}
                 {errors.confirmPassword &&
                   errors.confirmPassword.type === 'validate' &&
-                  'Your password does not match'}
+                  'Your new password does not match'}
               </FormErrorMessage>
             </FormControl>
             {loading ? (
               <Flex alignItems="center" justifyContent="center">
                 <Spinner mr={2} />
-                <Text>Signing In...</Text>
+                <Text>Updating Password...</Text>
               </Flex>
             ) : (
               <Button
@@ -159,7 +138,7 @@ const SignUp = () => {
                 isLoading={formState.isSubmitting}
                 type="submit"
               >
-                Sign Up
+                Update Password
               </Button>
             )}
           </Stack>
@@ -169,4 +148,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default UpdatePassword;
