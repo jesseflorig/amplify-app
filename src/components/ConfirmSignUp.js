@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../hooks/useAmplify';
 import { useForm } from 'react-hook-form';
-import { AUTH_USER_TOKEN_KEY, AUTH_USERNAME_KEY } from '../util';
+import { AUTH_USERNAME_KEY } from '../util';
 
 import {
   Alert,

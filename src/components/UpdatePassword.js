@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../hooks/useAmplify';
 import { useForm } from 'react-hook-form';
+import { AUTH_USER_TOKEN_KEY, AUTH_USERNAME_KEY } from '../util';
 
 import {
   Alert,
@@ -17,41 +18,48 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core';
+import { useHistory } from 'react-router-dom';
 
 const UpdatePassword = () => {
   const MIN_PASSWORD_LENGTH = 8;
   const Auth = useAuth();
   const [loading, setLoading] = React.useState(false);
   const [updateError, setUpdateError] = React.useState(false);
-  const tempPasswordRef = React.useRef();
+  const oldPasswordRef = React.useRef();
+  const history = useHistory();
   const { errors, formState, handleSubmit, register, reset, watch } = useForm();
   const watchNewPassword = watch('newPassword', '');
 
-  const handleSignUp = ({ email, username, password }) => {
+  const handleUpdatePassword = ({ oldPassword, newPassword }) => {
     setUpdateError(false);
     setLoading(true);
 
-    Auth.signUp({
-      username,
-      password,
-      attributes: {
-        email,
-      },
-    })
-      .then((data) => {
-        setLoading(false);
+    const username = localStorage.getItem(AUTH_USERNAME_KEY);
 
-        //TODO: Confirm email page
+    // Sign in and immediately invoke change password with the returnd CognitoUserObject
+    Auth.signIn(username, oldPassword)
+      .then((user) => {
+        if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+          Auth.completeNewPassword(user, newPassword)
+            .then((user) => {
+              const { jwtToken } = user.signInUserSession.accessToken;
+              localStorage.setItem(AUTH_USER_TOKEN_KEY, jwtToken);
+
+              const to = history.state ? history.state.from.pathanme : '/';
+              history.push(to);
+            })
+            .catch((err) => {
+              throw new Error(`${err}`);
+            });
+        }
       })
       .catch((err) => {
-        console.error(err);
         setUpdateError(true);
-        setLoading(false);
+        console.error(err);
         reset();
-        tempPasswordRef.current.focus();
+        oldPasswordRef.current.focus();
       });
   };
-
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
       <Stack spacing={2} width="30em">
@@ -64,23 +72,23 @@ const UpdatePassword = () => {
             <AlertDescription>Please try again, later.</AlertDescription>
           </Alert>
         )}
-        <form onSubmit={handleSubmit(handleSignUp)}>
+        <form onSubmit={handleSubmit(handleUpdatePassword)}>
           <Stack spacing={2}>
-            <FormControl isInvalid={errors.tempPassword}>
+            <FormControl isInvalid={errors.oldPassword}>
               <Input
-                name="tempPassword"
+                name="oldPassword"
                 type="password"
                 placeholder="Temporary password"
                 ref={(el) => {
                   register(el, {
                     required: true,
                   });
-                  tempPasswordRef.current = el;
+                  oldPasswordRef.current = el;
                 }}
               />
               <FormErrorMessage>
-                {errors.tempPassword &&
-                  errors.tempPassword.type === 'required' &&
+                {errors.oldPassword &&
+                  errors.oldPassword.type === 'required' &&
                   'Your old password is required'}
               </FormErrorMessage>
             </FormControl>

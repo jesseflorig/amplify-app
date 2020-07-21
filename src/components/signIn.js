@@ -35,22 +35,21 @@ const SignIn = () => {
 
     Auth.signIn(username, password)
       .then((user) => {
-        console.log(user);
-
         // User needs to change password
-        if (user.challengName === 'NEW_PASSWORD_REQUIRED') {
+        if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+          localStorage.setItem(AUTH_USERNAME_KEY, username);
+          history.push('/update-password');
+        } else {
+          //User is confirmed
+          const { jwtToken } = user.signInUserSession.accessToken;
+          localStorage.setItem(AUTH_USER_TOKEN_KEY, jwtToken);
+
+          const to = history.state ? history.state.from.pathanme : '/';
+          history.push(to);
         }
-
-        //User is confirmed
-        const { jwtToken } = user.signInUserSession.accessToken;
-        localStorage.setItem(AUTH_USER_TOKEN_KEY, jwtToken);
-
-        // TODO: Login toast
-
-        const to = history.state ? history.state.from.pathanme : '/';
-        history.push(to);
       })
       .catch((err) => {
+        console.log(err);
         setLoading(false);
 
         // User needs to confirm account
