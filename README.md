@@ -32,9 +32,7 @@ yarn start
 
 ## Todo
 
-- [ ] Finish Signup (email confirmation)
 - [ ] Handle temp password
-- [ ] Handle verify on login
 - [ ] Finish Remember Me
 - [ ] Add profile page
 - [ ] Add CRUD example

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../hooks/useAmplify';
 import { useForm } from 'react-hook-form';
+import { AUTH_USERNAME_KEY } from '../util';
 
 import {
   Alert,
@@ -18,7 +19,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core';
-import { Link as RouteLink } from 'react-router-dom';
+import { useHistory, Link as RouteLink } from 'react-router-dom';
 
 const SignUp = () => {
   const MIN_PASSWORD_LENGTH = 8;
@@ -27,6 +28,7 @@ const SignUp = () => {
   const [signUpError, setSignUpError] = React.useState(false);
   const emailRef = React.useRef();
   const { errors, formState, handleSubmit, register, reset, watch } = useForm();
+  const history = useHistory();
   const watchPassword = watch('password', '');
 
   const handleSignUp = ({ email, username, password }) => {
@@ -40,13 +42,12 @@ const SignUp = () => {
         email,
       },
     })
-      .then((data) => {
+      .then(() => {
         setLoading(false);
-
-        //TODO: Confirm email page
+        localStorage.setItem(AUTH_USERNAME_KEY, username);
+        history.push('/confirm-signup');
       })
       .catch((err) => {
-        console.error(err);
         setSignUpError(true);
         setLoading(false);
         reset();
