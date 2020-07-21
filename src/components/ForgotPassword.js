@@ -1,5 +1,7 @@
 import React from 'react';
+import { useAuth } from '../hooks/useAmplify';
 import { useForm } from 'react-hook-form';
+import { AUTH_USERNAME_KEY } from '../util';
 
 import {
   Button,
@@ -12,46 +14,48 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core';
-import { Link as RouteLink } from 'react-router-dom';
+import { useHistory, Link as RouteLink } from 'react-router-dom';
 
-const SignUp = () => {
+const ForgotPassword = () => {
+  const Auth = useAuth();
+  const history = useHistory();
   const { errors, formState, handleSubmit, register } = useForm();
 
-  console.log(errors);
+  const handleForgotPassword = ({ username }) => {
+    Auth.forgotPassword(username)
+      .then((data) => {
+        localStorage.setItem(AUTH_USERNAME_KEY, username);
 
-  const onSubmit = (data) => {
-    console.log('submitting', data);
+        history.push('/confirm-forgot-password');
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
       <Stack spacing={2} width="30em">
-        <Heading textAlign="center">Recover your password</Heading>
+        <Heading textAlign="center">Request a reset code</Heading>
         <Text textAlign="center">
           {'or '}
           <Link as={RouteLink} to="/signin">
             Sign in
           </Link>
         </Text>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleForgotPassword)}>
           <Stack spacing={2}>
-            <FormControl isInvalid={errors.email}>
+            <FormControl isInvalid={errors.username}>
               <Input
-                name="email"
-                type="email"
-                placeholder="Email"
+                name="username"
+                type="text"
+                placeholder="Username"
                 ref={register({
                   required: true,
-                  pattern: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i,
                 })}
               />
               <FormErrorMessage>
-                {errors.email &&
-                  errors.email.type === 'required' &&
-                  'An email is required'}
-                {errors.email &&
-                  errors.email.type === 'pattern' &&
-                  'Email entered does not appear to be valid'}
+                {errors.username &&
+                  errors.username.type === 'required' &&
+                  'An username is required'}
               </FormErrorMessage>
             </FormControl>
             <Button
@@ -61,7 +65,7 @@ const SignUp = () => {
               isLoading={formState.isSubmitting}
               type="submit"
             >
-              Recover Password
+              Send Reset Code
             </Button>
           </Stack>
         </form>
@@ -70,4 +74,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default ForgotPassword;

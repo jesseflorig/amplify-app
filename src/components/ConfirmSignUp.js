@@ -56,7 +56,7 @@ const ConfirmSignup = () => {
     <Flex height="100vh" alignItems="center" justifyContent="center">
       <Stack spacing={2} width="30em">
         {confirmSuccess ? (
-          <>
+          <Stack spacing={2}>
             <Heading textAlign="center">Account confirmed</Heading>
             <Text textAlign="center">
               {'Redirecting to '}
@@ -64,14 +64,14 @@ const ConfirmSignup = () => {
                 Sign In...
               </Link>
             </Text>
-          </>
+          </Stack>
         ) : (
-          <>
+          <Stack spacing={2}>
             <Heading textAlign="center">Confirm your account</Heading>
             <Text textAlign="center">
               You should receive a confirmation code in your email
             </Text>
-          </>
+          </Stack>
         )}
         {confirmError && (
           <Alert status="error">
