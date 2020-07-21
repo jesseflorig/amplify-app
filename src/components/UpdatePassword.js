@@ -55,7 +55,6 @@ const UpdatePassword = () => {
       })
       .catch((err) => {
         setUpdateError(true);
-        console.error(err);
         reset();
         oldPasswordRef.current.focus();
       });

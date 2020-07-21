@@ -41,7 +41,6 @@ const ForgotPassword = () => {
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err);
       });
   };
 

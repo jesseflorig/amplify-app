@@ -49,14 +49,12 @@ const SignIn = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
-        setLoading(false);
-
         // User needs to confirm account
         if (err.code === 'UserNotConfirmedException') {
           localStorage.setItem(AUTH_USERNAME_KEY, username);
           history.push('/confirm-signup');
         } else {
+          setLoading(false);
           setSignInError(true);
           reset();
           usernameRef.current.focus();

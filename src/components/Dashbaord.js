@@ -12,9 +12,11 @@ const Dashboard = () => {
   const handleSignOut = () => {
     Auth.signOut({ global: true })
       .then((data) => {
-        // TODO: SignOut toast
+        // TODO: SignOut Toast
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        // TODO: SignOut Error Toast
+      });
 
     localStorage.removeItem(AUTH_USER_TOKEN_KEY);
     history.push('/signIn');

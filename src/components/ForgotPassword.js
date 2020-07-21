@@ -28,7 +28,9 @@ const ForgotPassword = () => {
 
         history.push('/confirm-forgot-password');
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // TODO: Show alert box
+      });
   };
 
   return (
