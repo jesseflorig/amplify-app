@@ -10,6 +10,8 @@ A quickstart Amplify app with custom authentication workflow
 
 ## Setup
 
+You'll need to install [Amplify CLI](https://docs.amplify.aws/cli/start/install) prior to setup
+
 ### Step 1: Copy the example environment file
 ```sh
 cp .env.example .env
