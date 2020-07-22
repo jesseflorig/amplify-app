@@ -10,9 +10,9 @@ A quickstart Amplify app with custom authentication workflow
 
 ## Setup
 
-### Step 1: Create dotenv
+### Step 1: Copy the example environment file
 ```sh
-cp sample.env .env
+cp .env.example .env
 ```
 
 ### Step 2: Install dependencies
@@ -20,23 +20,18 @@ cp sample.env .env
 yarn
 ```
 
-### Step 3: Initialize Amplify
+### Step 3: Initialize AWS Amplify and provision resources
 ```sh
 amplify init
-```
-
-### Step 4: Startup AWS resources
-```sh
 amplify add auth
 amplify push
 ```
 
-### Step 5: Start the development server
+### Step 4: Start the development server
 ```sh
 yarn start
 ```
 
 ## Todo
-
 - [ ] Remember Me
 - [ ] Resend token
