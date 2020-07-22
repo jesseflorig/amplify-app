@@ -9,12 +9,13 @@ import {
   FormControl,
   FormErrorMessage,
   Heading,
-  Input,
   Link,
+  Spinner,
   Stack,
   Text,
 } from '@chakra-ui/core';
 import { useHistory, Link as RouteLink } from 'react-router-dom';
+import PasswordInput from './PasswordInput';
 
 const ForgotPassword = () => {
   const MIN_PASSWORD_LENGTH = 8;
@@ -59,24 +60,27 @@ const ForgotPassword = () => {
           </Stack>
         ) : (
           <Stack spacing={2}>
-            <Heading textAlign="center">Password reset</Heading>
-            <Text textAlign="center">
-              {'Redirecting to '}
-              <Link as={RouteLink} to="/signin">
-                Sign in...
-              </Link>
-            </Text>
+            <Heading textAlign="center">Password reset successful</Heading>
+            <Flex alignItems="center" justifyContent="center">
+              <Spinner size="sm" mr={2} />
+              <Text textAlign="center">
+                {'Redirecting to '}
+                <Link as={RouteLink} to="/signin">
+                  Sign in
+                </Link>
+                {'...'}
+              </Text>
+            </Flex>
           </Stack>
         )}
         {!confirmReset && (
           <form onSubmit={handleSubmit(handleConfirmForgotPassword)}>
             <Stack spacing={2}>
               <FormControl isInvalid={errors.code}>
-                <Input
+                <PasswordInput
                   name="code"
-                  type="password"
                   placeholder="Reset code"
-                  ref={(el) => {
+                  forwardRef={(el) => {
                     register(el, { required: true });
                     codeRef.current = el;
                   }}
@@ -87,11 +91,10 @@ const ForgotPassword = () => {
                 </FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={errors.newPassword}>
-                <Input
+                <PasswordInput
                   name="newPassword"
-                  type="password"
                   placeholder="New password"
-                  ref={register({
+                  forwardRef={register({
                     required: true,
                     minLength: MIN_PASSWORD_LENGTH,
                   })}
@@ -109,11 +112,10 @@ const ForgotPassword = () => {
                 </FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={errors.confirmPassword}>
-                <Input
+                <PasswordInput
                   name="confirmPassword"
-                  type="password"
                   placeholder="Confirm new password"
-                  ref={register({
+                  forwardRef={register({
                     required: true,
                     validate: (value) => value === watchNewPassword,
                   })}

@@ -13,12 +13,12 @@ import {
   FormControl,
   FormErrorMessage,
   Heading,
-  Input,
   Spinner,
   Stack,
   Text,
 } from '@chakra-ui/core';
 import { useHistory } from 'react-router-dom';
+import PasswordInput from './PasswordInput';
 
 const UpdatePassword = () => {
   const MIN_PASSWORD_LENGTH = 8;
@@ -74,11 +74,10 @@ const UpdatePassword = () => {
         <form onSubmit={handleSubmit(handleUpdatePassword)}>
           <Stack spacing={2}>
             <FormControl isInvalid={errors.oldPassword}>
-              <Input
+              <PasswordInput
                 name="oldPassword"
-                type="password"
                 placeholder="Temporary password"
-                ref={(el) => {
+                forwardRef={(el) => {
                   register(el, {
                     required: true,
                   });
@@ -92,11 +91,10 @@ const UpdatePassword = () => {
               </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={errors.newPassword}>
-              <Input
+              <PasswordInput
                 name="newPassword"
-                type="password"
                 placeholder="New password"
-                ref={register({
+                forwardRef={register({
                   required: true,
                   minLength: MIN_PASSWORD_LENGTH,
                 })}
@@ -114,11 +112,10 @@ const UpdatePassword = () => {
               </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={errors.confirmPassword}>
-              <Input
+              <PasswordInput
                 name="confirmPassword"
-                type="password"
                 placeholder="Confirm new password"
-                ref={register({
+                forwardRef={register({
                   required: true,
                   validate: (value) => value === watchNewPassword,
                 })}

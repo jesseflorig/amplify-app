@@ -5,6 +5,7 @@ A quickstart Amplify app with custom authentication workflow
 ## Features
  - [x] Complete authentication workflow via [Amplify Authentication](https://docs.amplify.aws/lib/auth/getting-started/q/platform/js#authentication-with-amplify)
  - [x] Custom Auth UI made with [Chakra UI](https://chakra-ui.com/getting-started) & [React Use Form Hook](https://react-hook-form.com/api)
+ - [ ] Responsive UI
  - [ ] Complete CRUD workflow via [AWS Appsync]()
 
 ## Setup
@@ -38,7 +39,4 @@ yarn start
 ## Todo
 
 - [ ] Remember Me
-- [ ] Show/Hide password
-- [ ] Password character count
 - [ ] Resend token
-- [ ] Add profile page

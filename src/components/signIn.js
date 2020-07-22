@@ -20,6 +20,7 @@ import {
   Text,
 } from '@chakra-ui/core';
 import { useHistory, Link as RouteLink } from 'react-router-dom';
+import PasswordInput from './PasswordInput';
 
 const SignIn = () => {
   const Auth = useAuth();
@@ -95,11 +96,10 @@ const SignIn = () => {
               </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={errors.password}>
-              <Input
+              <PasswordInput
                 name="password"
-                type="password"
                 placeholder="Password"
-                ref={register({ required: true })}
+                forwardRef={register({ required: true })}
                 isDisabled={loading}
               />
               <FormErrorMessage>

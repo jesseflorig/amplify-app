@@ -55,22 +55,26 @@ const ConfirmSignup = () => {
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
       <Stack spacing={2} width="30em">
-        {confirmSuccess ? (
-          <Stack spacing={2}>
-            <Heading textAlign="center">Account confirmed</Heading>
-            <Text textAlign="center">
-              {'Redirecting to '}
-              <Link as={RouteLink} to="/signin">
-                Sign In...
-              </Link>
-            </Text>
-          </Stack>
-        ) : (
+        {!confirmSuccess ? (
           <Stack spacing={2}>
             <Heading textAlign="center">Confirm your account</Heading>
             <Text textAlign="center">
               You should receive a confirmation code in your email
             </Text>
+          </Stack>
+        ) : (
+          <Stack spacing={2}>
+            <Heading textAlign="center">Account confirmed</Heading>
+            <Flex alignItems="center" justifyContent="center">
+              <Spinner size="sm" mr={2} />
+              <Text textAlign="center">
+                {'Redirecting to '}
+                <Link as={RouteLink} to="/signin">
+                  Sign In
+                </Link>
+                {'...'}
+              </Text>
+            </Flex>
           </Stack>
         )}
         {confirmError && (

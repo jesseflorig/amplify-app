@@ -20,6 +20,7 @@ import {
   Text,
 } from '@chakra-ui/core';
 import { useHistory, Link as RouteLink } from 'react-router-dom';
+import PasswordInput from './PasswordInput';
 
 const SignUp = () => {
   const MIN_PASSWORD_LENGTH = 8;
@@ -107,11 +108,10 @@ const SignUp = () => {
               </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={errors.password}>
-              <Input
+              <PasswordInput
                 name="password"
-                type="password"
                 placeholder="Password"
-                ref={register({
+                forwardRef={register({
                   required: true,
                   minLength: MIN_PASSWORD_LENGTH,
                 })}
@@ -129,11 +129,10 @@ const SignUp = () => {
               </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={errors.confirmPassword}>
-              <Input
+              <PasswordInput
                 name="confirmPassword"
-                type="password"
                 placeholder="Confirm password"
-                ref={register({
+                forwardRef={register({
                   required: true,
                   validate: (value) => value === watchPassword,
                 })}
