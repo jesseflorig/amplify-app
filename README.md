@@ -12,7 +12,7 @@ A quickstart Amplify application
 
 ## Setup
 
-### Prerequisits
+### Prerequisites
  - Create an [AWS Account](https://aws.amazon.com/)
  - Install and configure [Amplify CLI](https://docs.amplify.aws/cli/start/install)
 
