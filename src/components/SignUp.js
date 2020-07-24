@@ -1,5 +1,6 @@
 import React from 'react';
-import { useAuth } from '../hooks/useAmplify';
+import { usePageTitle } from '../hooks/browser-hooks';
+import { useAuth } from '../hooks/amplify-hooks';
 import { useForm } from 'react-hook-form';
 import { AUTH_USERNAME_KEY } from '../util';
 
@@ -23,7 +24,7 @@ import { useHistory, Link as RouteLink } from 'react-router-dom';
 import PasswordInput from './PasswordInput';
 
 const SignUp = () => {
-  const MIN_PASSWORD_LENGTH = 8;
+  const minPasswordLength = process.env.REACT_APP_MIN_PASSWORD_LENGTH;
   const Auth = useAuth();
   const [loading, setLoading] = React.useState(false);
   const [signUpError, setSignUpError] = React.useState(false);
@@ -31,6 +32,8 @@ const SignUp = () => {
   const { errors, formState, handleSubmit, register, reset, watch } = useForm();
   const history = useHistory();
   const watchPassword = watch('password', '');
+
+  usePageTitle('Sign Up');
 
   const handleSignUp = ({ email, username, password }) => {
     setSignUpError(false);
@@ -113,11 +116,11 @@ const SignUp = () => {
                 placeholder="Password"
                 forwardRef={register({
                   required: true,
-                  minLength: MIN_PASSWORD_LENGTH,
+                  minLength: minPasswordLength,
                 })}
               />
               <Text fontSize="xs" color="gray.500" mx={1}>
-                {`Minimum of ${MIN_PASSWORD_LENGTH} characters.`}
+                {`Minimum of ${minPasswordLength} characters.`}
               </Text>
               <FormErrorMessage>
                 {errors.password &&
@@ -125,7 +128,7 @@ const SignUp = () => {
                   'A password is required'}
                 {errors.password &&
                   errors.password.type === 'minLength' &&
-                  `Your password must be at least ${MIN_PASSWORD_LENGTH} characters`}
+                  `Your password must be at least ${minPasswordLength} characters`}
               </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={errors.confirmPassword}>

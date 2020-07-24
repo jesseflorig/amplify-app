@@ -45,6 +45,3 @@ yarn start
 
 ## Todo
 - [ ] Distinct username and email
-- [ ] Remember Me
-- [ ] Resend token
-- [ ] Dot env

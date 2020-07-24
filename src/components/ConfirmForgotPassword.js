@@ -1,5 +1,6 @@
 import React from 'react';
-import { useAuth } from '../hooks/useAmplify';
+import { usePageTitle } from '../hooks/browser-hooks';
+import { useAuth } from '../hooks/amplify-hooks';
 import { useForm } from 'react-hook-form';
 import { AUTH_USERNAME_KEY } from '../util';
 
@@ -26,6 +27,8 @@ const ForgotPassword = () => {
   const history = useHistory();
   const { errors, formState, handleSubmit, register, watch } = useForm();
   const watchNewPassword = watch('newPassword', '');
+
+  usePageTitle('Forgot Password');
 
   const handleConfirmForgotPassword = ({ code, newPassword }) => {
     setLoading(true);

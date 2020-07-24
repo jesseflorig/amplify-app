@@ -1,5 +1,6 @@
 import React from 'react';
-import { useAuth } from '../hooks/useAmplify';
+import { usePageTitle } from '../hooks/browser-hooks';
+import { useAuth } from '../hooks/amplify-hooks';
 import { useForm } from 'react-hook-form';
 import { AUTH_USER_TOKEN_KEY, AUTH_USERNAME_KEY } from '../util';
 
@@ -29,6 +30,8 @@ const UpdatePassword = () => {
   const history = useHistory();
   const { errors, formState, handleSubmit, register, reset, watch } = useForm();
   const watchNewPassword = watch('newPassword', '');
+
+  usePageTitle('Update Password');
 
   const handleUpdatePassword = ({ oldPassword, newPassword }) => {
     setUpdateError(false);

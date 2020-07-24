@@ -1,5 +1,6 @@
 import React from 'react';
-import { useAuth } from '../hooks/useAmplify';
+import { usePageTitle } from '../hooks/browser-hooks';
+import { useAuth } from '../hooks/amplify-hooks';
 import { useForm } from 'react-hook-form';
 import { AUTH_USER_TOKEN_KEY, AUTH_USERNAME_KEY } from '../util';
 
@@ -8,7 +9,6 @@ import {
   AlertIcon,
   AlertDescription,
   Button,
-  Checkbox,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -29,6 +29,8 @@ const SignIn = () => {
   const usernameRef = React.useRef();
   const history = useHistory();
   const { handleSubmit, errors, formState, register, reset } = useForm();
+
+  usePageTitle('Sign In');
 
   const handleSignIn = ({ username, password }) => {
     setSignInError(false);
@@ -106,14 +108,6 @@ const SignIn = () => {
                 {errors.password && 'Password is required'}
               </FormErrorMessage>
             </FormControl>
-            <Flex justifyContent="space-between">
-              <Checkbox name="remember" ref={register} isDisabled={loading}>
-                Remember Me
-              </Checkbox>
-              <Link as={RouteLink} to="/forgot-password">
-                Forgot your password?
-              </Link>
-            </Flex>
             {loading ? (
               <Flex alignItems="center" justifyContent="center">
                 <Spinner mr={2} />
@@ -121,7 +115,7 @@ const SignIn = () => {
               </Flex>
             ) : (
               <Button
-                mt={4}
+                mt={2}
                 width="100%"
                 leftIcon="lock"
                 isLoading={formState.isSubmitting}
@@ -130,6 +124,11 @@ const SignIn = () => {
                 Sign In
               </Button>
             )}
+            <Flex justifyContent="center">
+              <Link as={RouteLink} to="/forgot-password">
+                Forgot your password?
+              </Link>
+            </Flex>
           </Stack>
         </form>
       </Stack>
