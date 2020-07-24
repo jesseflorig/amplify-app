@@ -28,12 +28,13 @@ const ForgotPassword = () => {
     Auth.forgotPassword(username)
       .then((data) => {
         localStorage.setItem(AUTH_USERNAME_KEY, username);
-
-        history.push('/confirm-forgot-password');
       })
       .catch((err) => {
         // TODO: Show alert box
       });
+
+    // Forward to confirm wether or not user is found because sekurity
+    history.push('/confirm-forgot-password');
   };
 
   return (

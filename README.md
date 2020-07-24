@@ -38,10 +38,10 @@ yarn start
 ```
 
 ## Customizing
-
 - Modifying the `.env` allows you to change many aspects of the application
 - Modifying the `src/theme.js` allows you to customize the application theme
 - Modifying the Amplify services configurations allows you to further customize the application
 
-## Todo
-- [ ] Distinct username and email
+## Backlog
+- [ ] Get password requirements from AWS
+- [ ] Get signup fields from AWS

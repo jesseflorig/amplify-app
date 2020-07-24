@@ -27,8 +27,10 @@ const SignUp = () => {
   const minPasswordLength = process.env.REACT_APP_MIN_PASSWORD_LENGTH;
   const Auth = useAuth();
   const [loading, setLoading] = React.useState(false);
+  const [usernameExists, setUsernameExists] = React.useState(false);
   const [signUpError, setSignUpError] = React.useState(false);
   const emailRef = React.useRef();
+  const usernameRef = React.useRef();
   const { errors, formState, handleSubmit, register, reset, watch } = useForm();
   const history = useHistory();
   const watchPassword = watch('password', '');
@@ -36,6 +38,7 @@ const SignUp = () => {
   usePageTitle('Sign Up');
 
   const handleSignUp = ({ email, username, password }) => {
+    setUsernameExists(false);
     setSignUpError(false);
     setLoading(true);
 
@@ -52,10 +55,16 @@ const SignUp = () => {
         history.push('/confirm-signup');
       })
       .catch((err) => {
-        setSignUpError(true);
         setLoading(false);
-        reset();
-        emailRef.current.focus();
+        if (err.code === 'UsernameExistsException') {
+          setUsernameExists(true);
+          usernameRef.current.value = '';
+          usernameRef.current.focus();
+        } else {
+          setSignUpError(true);
+          reset();
+          emailRef.current.focus();
+        }
       });
   };
 
@@ -69,6 +78,13 @@ const SignUp = () => {
             Sign in
           </Link>
         </Text>
+        {usernameExists && (
+          <Alert status="warning">
+            <AlertIcon />
+            <AlertTitle mr={2}>Dang, that username is taken.</AlertTitle>
+            <AlertDescription>Try something else.</AlertDescription>
+          </Alert>
+        )}
         {signUpError && (
           <Alert status="error">
             <AlertIcon />
@@ -104,7 +120,10 @@ const SignUp = () => {
               <Input
                 name="username"
                 placeholder="Username"
-                ref={register({ required: true })}
+                ref={(el) => {
+                  register(el, { required: true });
+                  usernameRef.current = el;
+                }}
               />
               <FormErrorMessage>
                 {errors.username && 'Username is required'}
